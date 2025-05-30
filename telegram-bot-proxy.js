@@ -102,6 +102,7 @@ async function handleRequest(request) {
   // Expected format: /bot{token}/{method}
   const pathParts = url.pathname.split('/').filter(Boolean);
   if (pathParts.length < 2 || !pathParts[0].startsWith('bot')) {
+    console.error('Invalid bot request format', { status: 400 });
     return new Response('Invalid bot request format', { status: 400 });
   }
 
@@ -117,6 +118,7 @@ async function handleRequest(request) {
     try {
       body = await request.arrayBuffer();
     } catch (err) {
+      console.error(`Failed to read request body: ${err.message}`, { status: 400 });
       return new Response(`Failed to read request body: ${err.message}`, { status: 400 });
     }
   }
@@ -134,8 +136,15 @@ async function handleRequest(request) {
     res.headers.set('Access-Control-Allow-Origin', '*');
     res.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+    console.log('Request succes', {
+      method: request.method,
+      headers: request.headers,
+      body: body,
+      redirect: 'follow',
+    });
     return res;
   } catch (err) {
+    console.error(`Error proxying request: ${err.message}`, { status: 500 });
     return new Response(`Error proxying request: ${err.message}`, { status: 500 });
   }
 }

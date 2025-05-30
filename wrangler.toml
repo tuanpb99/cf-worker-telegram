@@ -1,0 +1,10 @@
+
+# wrangler.toml (wrangler v3.88.0^)
+name = "cf-worker-telegram"
+main = "telegram-bot-proxy.js"
+compatibility_date = "2025-02-24"
+
+[observability.logs]
+enabled = true
+
+
