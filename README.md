@@ -23,6 +23,7 @@ Chạy trên Cloudflare Worker, đơn giản hoạt động như một proxy cho
 - Gửi tệp tin bằng `multipart/form-data` (ví dụ: `sendPhoto`, `sendDocument`)
 - Xử lý biểu tượng cảm xúc và ký tự đặc biệt ổn định hơn
 - Tải tệp tin từ đường dẫn `/file/bot{TOKEN}/<file_path>`
+- **MỚI:** Gửi hình ảnh từ URL vào Group với endpoint `/bot{TOKEN}/sendPhotoFromUrl`
 
 ## Cài đặt
 
@@ -71,6 +72,39 @@ fetch('https://{URL_WORKER_CỦA_BẠN}/bot{TOKEN_BOT_CỦA_BẠN}/sendMessage',
 
 ```
 https://{URL_WORKER_CỦA_BẠN}/file/bot{TOKEN_BOT_CỦA_BẠN}/<file_path>
+```
+
+### Gửi hình ảnh từ URL vào Group
+
+Sử dụng endpoint đặc biệt để gửi hình ảnh từ URL vào group hoặc chat:
+
+```
+POST https://{URL_WORKER_CỦA_BẠN}/bot{TOKEN_BOT_CỦA_BẠN}/sendPhotoFromUrl
+```
+
+**Tham số bắt buộc (JSON body):**
+- `url`: URL trực tiếp đến file hình ảnh
+- `chat_id`: ID của group hoặc user để gửi hình ảnh
+
+**Tham số tùy chọn:**
+- `caption`: Chú thích cho hình ảnh
+- `parse_mode`: Chế độ parse cho caption (HTML, Markdown, v.v.)
+
+**Ví dụ:**
+```javascript
+fetch('https://{URL_WORKER_CỦA_BẠN}/bot{TOKEN_BOT_CỦA_BẠN}/sendPhotoFromUrl', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+        url: "https://example.com/image.jpg",
+        chat_id: "123456789",
+        caption: "Hình ảnh gửi từ URL!"
+    })
+})
+.then(response => response.json())
+.then(data => console.log(data));
 ```
 
 ## 🔒 Bảo mật
